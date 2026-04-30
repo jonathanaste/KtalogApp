@@ -4,8 +4,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Sort
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -30,7 +30,7 @@ fun CatalogSearchBar(
         leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
         trailingIcon = {
             IconButton(onClick = onFilterClick) {
-                Icon(Icons.Default.Sort, contentDescription = "Filtrar")
+                Icon(Icons.AutoMirrored.Filled.Sort, contentDescription = "Filtrar")
             }
         },
         shape = RoundedCornerShape(24.dp),

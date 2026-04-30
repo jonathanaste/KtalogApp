@@ -9,7 +9,7 @@ data class ProductDTO(
     @SerialName("name") val name: String,
     @SerialName("price") val price: Double,
     @SerialName("description") val description: String,
-    @SerialName("image_url") val imageUrl: String,
+    @SerialName("image_url") val imageUrl: String="",
     @SerialName("category") val category: String,
-    @SerialName("stock") val stock: Int
+    @SerialName("stock") val stock: Int=0,
 )
