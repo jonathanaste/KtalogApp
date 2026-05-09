@@ -1,16 +1,12 @@
 package com.example.ktalogapp.ui.catalog
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,43 +32,17 @@ fun CatalogScreen(
 
     Scaffold(
         topBar = {
-            Column {
-                Box(modifier = Modifier.wrapContentSize(Alignment.TopEnd).padding(top=16.dp)) {
-                    CatalogSearchBar(
-                        query = state.searchQuery,
-                        onQueryChange = { viewModel.handleEvent(CatalogContract.Event.OnSearchQueryChanged(it)) },
-                        onFilterClick = { showSortMenu = true }
-                    )
-
-                    DropdownMenu(
-                        expanded = showSortMenu,
-                        onDismissRequest = { showSortMenu = false },
-                        modifier = Modifier.padding(end = 16.dp)
-                    ) {
-                        DropdownMenuItem(
-                            text = { Text("Nombre (A-Z)") },
-                            onClick = {
-                                viewModel.handleEvent(CatalogContract.Event.OnSortOrderChanged(SortOrder.NAME_ASC))
-                                showSortMenu = false
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Precio (Menor a Mayor)") },
-                            onClick = {
-                                viewModel.handleEvent(CatalogContract.Event.OnSortOrderChanged(SortOrder.PRICE_ASC))
-                                showSortMenu = false
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Precio (Mayor a Menor)") },
-                            onClick = {
-                                viewModel.handleEvent(CatalogContract.Event.OnSortOrderChanged(SortOrder.PRICE_DESC))
-                                showSortMenu = false
-                            }
-                        )
-                    }
+            CatalogSearchBar(
+                query = state.searchQuery,
+                onQueryChange = { viewModel.handleEvent(CatalogContract.Event.OnSearchQueryChanged(it)) },
+                onFilterClick = { showSortMenu = true },
+                showSortMenu = showSortMenu,
+                onDismissMenu = { showSortMenu = false },
+                onSortOptionClick = { order ->
+                    viewModel.handleEvent(CatalogContract.Event.OnSortOrderChanged(order))
+                    showSortMenu = false
                 }
-            }
+            )
         }
     ) { paddingValues ->
         Box(
