@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
@@ -32,12 +33,12 @@ class CatalogViewModel @Inject constructor(
     private val _effect = MutableSharedFlow<CatalogContract.Effect>()
     val effect = _effect.asSharedFlow()
 
-    // Cache para evitar llamadas innecesarias al Repositorio
     private var fullProductList: List<Product> = emptyList()
+    private var isFirstLoadComplete = false
 
     init {
         observeSearchChanges()
-        handleEvent(CatalogContract.Event.LoadProducts)
+        fetchProducts()
     }
 
     fun handleEvent(event: CatalogContract.Event) {
@@ -61,6 +62,7 @@ class CatalogViewModel @Inject constructor(
     private fun observeSearchChanges() {
         state.map { it.searchQuery }
             .distinctUntilChanged()
+            .drop(1)
             .debounce(300L)
             .onEach { applyFilters() }
             .flowOn(Dispatchers.Default)
@@ -72,6 +74,7 @@ class CatalogViewModel @Inject constructor(
             _state.update { it.copy(isLoading = true, error = null) }
             getProductsUseCase().onSuccess { products ->
                 fullProductList = products
+                isFirstLoadComplete = true
                 applyFilters()
             }.onFailure { error ->
                 _state.update { it.copy(isLoading = false, error = error.message) }
@@ -80,6 +83,8 @@ class CatalogViewModel @Inject constructor(
     }
 
     private fun applyFilters() {
+        if (!isFirstLoadComplete && fullProductList.isEmpty()) return
+
         val currentQuery = _state.value.searchQuery
         val currentOrder = _state.value.sortOrder
 

@@ -5,13 +5,12 @@ import com.example.ktalogapp.domain.model.Product
 
 fun ProductDTO.toDomain(): Product {
     return Product(
-        id = id,
+        id = id.toString(),
         name = name,
-        price = price,
-        description = description,
-        imageUrl = imageUrl,
-        category = category,
-        stock = stock,
-        hasStock = stock > 0
+        price = price.toDoubleOrNull() ?: 0.0,
+        description = shortDescription.ifBlank { description },
+        imageUrl = images.firstOrNull()?.src ?: "",
+        category = categories.firstOrNull()?.name ?: "General",
+        hasStock = stockStatus == "instock",
     )
 }
