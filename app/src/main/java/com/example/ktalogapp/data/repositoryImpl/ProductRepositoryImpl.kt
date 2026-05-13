@@ -16,9 +16,18 @@ class ProductRepositoryImpl @Inject constructor(
             val response = api.getProducts()
             Result.success(response.map { it.toDomain() })
         } catch (e: UnknownHostException) {
-            Result.failure(Exception("No se pudo resolver el servidor (tiendalabotica.com). Revisa tu conexión a internet."))
+            Result.failure(Exception("Error de conexión: No se pudo encontrar el servidor de La Botica. Revisa el internet de tu emulador."))
         } catch (e: Exception) {
-            Result.failure(Exception("Error al conectar con la tienda: ${e.localizedMessage}"))
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getProductById(id: String): Result<Product> {
+        return try {
+            val response = api.getProductById(id)
+            Result.success(response.toDomain())
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 }

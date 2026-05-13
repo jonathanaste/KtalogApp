@@ -1,5 +1,6 @@
 package com.example.ktalogapp.data.remote.di
 
+import com.example.ktalogapp.BuildConfig
 import com.example.ktalogapp.data.remote.BoticaApiService
 import com.example.ktalogapp.data.remote.interceptors.AuthInterceptor
 import dagger.Module
@@ -19,8 +20,6 @@ import javax.inject.Singleton
 object NetworkModule {
 
     private const val BASE_URL = "https://tiendalabotica.com/wp-json/wc/v3/"
-    private const val CONSUMER_KEY = "ck_d08bab11ec0cfd2412b3211b667e4b5bf91bf346"
-    private const val CONSUMER_SECRET = "cs_66a8fe9ff2d573bb481b0ff7337b4c55c3afa042"
 
     @Provides
     @Singleton
@@ -46,7 +45,10 @@ object NetworkModule {
         loggingInterceptor: HttpLoggingInterceptor
     ): OkHttpClient {
         return OkHttpClient.Builder()
-            .addInterceptor(AuthInterceptor(CONSUMER_KEY, CONSUMER_SECRET))
+            .addInterceptor(AuthInterceptor(
+                consumerKey = BuildConfig.WC_CONSUMER_KEY,
+                consumerSecret = BuildConfig.WC_CONSUMER_SECRET
+            ))
             .addInterceptor(loggingInterceptor)
             .build()
     }
