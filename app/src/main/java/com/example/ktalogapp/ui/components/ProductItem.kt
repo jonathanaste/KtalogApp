@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.ktalogapp.domain.model.Product
+import com.example.ktalogapp.util.formatPrice
 
 @Composable
 fun ProductItem(
@@ -73,7 +74,7 @@ fun ProductItem(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "$${product.price}",
+                    text = "$${product.price.formatPrice()}",
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Bold
                 )

@@ -10,6 +10,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,10 +26,20 @@ import com.example.ktalogapp.ui.components.ProductItem
 
 @Composable
 fun CatalogScreen(
+    onNavigateToDetail: (String) -> Unit,
     viewModel: CatalogViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     var showSortMenu by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                is CatalogContract.Effect.NavigateToDetail -> onNavigateToDetail(effect.productId)
+                is CatalogContract.Effect.ShowSnackBar -> { /* Implementar snackbar si es necesario */ }
+            }
+        }
+    }
 
     Scaffold(
         topBar = {

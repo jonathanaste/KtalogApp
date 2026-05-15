@@ -8,9 +8,11 @@ fun ProductDTO.toDomain(): Product {
         id = id.toString(),
         name = name,
         price = price.toDoubleOrNull() ?: 0.0,
-        description = shortDescription.ifBlank { description },
+        description = description,
+        shortDescription = shortDescription,
         imageUrl = images.firstOrNull()?.src ?: "",
+        images = images.map { it.src },
         category = categories.firstOrNull()?.name ?: "General",
-        hasStock = stockStatus == "instock",
+        hasStock = stockStatus == "instock"
     )
 }
